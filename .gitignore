@@ -52,3 +52,6 @@ htmlcov/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Isolated Future LoRA Documentation (kept exclusively in orphan branch)
+Future LoRA Training Guide*
