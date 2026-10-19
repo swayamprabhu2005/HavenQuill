@@ -1,4 +1,4 @@
-"""SQLite database connection and schema management for Storybook Studio."""
+"""SQLite database connection and schema management for HavenQuill."""
 
 import sqlite3
 import logging
@@ -171,6 +171,19 @@ CREATE TABLE IF NOT EXISTS story_segments (
     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
 );
 
+-- Screenplay / Script adaptations table
+CREATE TABLE IF NOT EXISTS scripts (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL,
+    title TEXT NOT NULL,
+    script_content TEXT NOT NULL,
+    covered_chapters_json TEXT NOT NULL DEFAULT '[]',
+    last_chapter_index INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
+
 -- Performance and isolation indexes
 CREATE INDEX IF NOT EXISTS idx_drafts_project ON source_drafts(project_id);
 CREATE INDEX IF NOT EXISTS idx_chapters_project ON chapters(project_id, order_index);
@@ -178,6 +191,7 @@ CREATE INDEX IF NOT EXISTS idx_scenes_chapter ON scenes(chapter_id, order_index)
 CREATE INDEX IF NOT EXISTS idx_characters_project ON characters(project_id);
 CREATE INDEX IF NOT EXISTS idx_locations_project ON locations(project_id);
 CREATE INDEX IF NOT EXISTS idx_segments_project ON story_segments(project_id, segment_index);
+CREATE INDEX IF NOT EXISTS idx_scripts_project ON scripts(project_id);
 CREATE INDEX IF NOT EXISTS idx_canon_project ON canon_facts(project_id);
 CREATE INDEX IF NOT EXISTS idx_events_project ON story_events(project_id, order_index);
 CREATE INDEX IF NOT EXISTS idx_version_entity ON version_history(entity_type, entity_id);

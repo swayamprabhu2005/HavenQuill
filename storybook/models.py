@@ -1,4 +1,4 @@
-"""Domain and Pydantic models for Storybook Studio."""
+"""Domain and Pydantic models for HavenQuill."""
 
 from datetime import datetime
 from typing import List, Dict, Optional, Any
@@ -254,3 +254,21 @@ class ContinuityReviewResponse(BaseModel):
 class SceneRewriteResponse(BaseModel):
     rewritten_prose: str
     summary_of_changes: str
+
+
+class Script(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    project_id: str
+    title: str = "Screenplay Adaptation"
+    script_content: str = ""
+    covered_chapters_json: List[str] = Field(default_factory=list)
+    last_chapter_index: int = 0
+    created_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    updated_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+
+class ScriptAdaptationResponse(BaseModel):
+    title: str = "Screenplay Adaptation"
+    logline: Optional[str] = ""
+    script_content: str
+    adaptation_notes: Optional[str] = ""

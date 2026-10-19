@@ -1,4 +1,4 @@
-"""Data access repositories for Storybook Studio entities."""
+"""Data access repositories for HavenQuill entities."""
 
 import json
 import sqlite3
@@ -9,7 +9,7 @@ from typing import List, Optional, Dict, Any
 from storybook.database import DatabaseManager, db_manager
 from storybook.models import (
     Project, SourceDraft, Chapter, Scene, Character, Location,
-    CanonFact, StoryEvent, AIJob, VersionHistory, StorySegment
+    CanonFact, StoryEvent, AIJob, VersionHistory, StorySegment, Script
 )
 
 logger = logging.getLogger(__name__)
@@ -893,5 +893,94 @@ class StorySegmentRepository:
         with self.db.get_connection() as conn:
             cur = conn.cursor()
             cur.execute("DELETE FROM story_segments WHERE id = ?", (segment_id,))
+            conn.commit()
+            return cur.rowcount > 0
+
+
+class ScriptRepository:
+    """Repository for managing screenplay / script adaptations."""
+
+    def __init__(self, db: DatabaseManager = db_manager):
+        self.db = db
+
+    def create(self, script: Script) -> Script:
+        with self.db.get_connection() as conn:
+            conn.execute(
+                """
+                INSERT INTO scripts (
+                    id, project_id, title, script_content,
+                    covered_chapters_json, last_chapter_index,
+                    created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    script.id, script.project_id, script.title, script.script_content,
+                    json.dumps(script.covered_chapters_json), script.last_chapter_index,
+                    script.created_at, script.updated_at
+                )
+            )
+            conn.commit()
+        return script
+
+    def get_by_project(self, project_id: str) -> Optional[Script]:
+        with self.db.get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM scripts WHERE project_id = ? ORDER BY updated_at DESC LIMIT 1", (project_id,))
+            row = cur.fetchone()
+            if not row:
+                return None
+            return Script(
+                id=row["id"],
+                project_id=row["project_id"],
+                title=row["title"],
+                script_content=row["script_content"],
+                covered_chapters_json=json.loads(row["covered_chapters_json"] or "[]"),
+                last_chapter_index=row["last_chapter_index"],
+                created_at=row["created_at"],
+                updated_at=row["updated_at"]
+            )
+
+    def get(self, script_id: str) -> Optional[Script]:
+        with self.db.get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM scripts WHERE id = ?", (script_id,))
+            row = cur.fetchone()
+            if not row:
+                return None
+            return Script(
+                id=row["id"],
+                project_id=row["project_id"],
+                title=row["title"],
+                script_content=row["script_content"],
+                covered_chapters_json=json.loads(row["covered_chapters_json"] or "[]"),
+                last_chapter_index=row["last_chapter_index"],
+                created_at=row["created_at"],
+                updated_at=row["updated_at"]
+            )
+
+    def update(self, script: Script) -> Script:
+        script.updated_at = datetime.utcnow().isoformat()
+        with self.db.get_connection() as conn:
+            conn.execute(
+                """
+                UPDATE scripts SET
+                    title = ?, script_content = ?,
+                    covered_chapters_json = ?, last_chapter_index = ?,
+                    updated_at = ?
+                WHERE id = ?
+                """,
+                (
+                    script.title, script.script_content,
+                    json.dumps(script.covered_chapters_json), script.last_chapter_index,
+                    script.updated_at, script.id
+                )
+            )
+            conn.commit()
+        return script
+
+    def delete(self, script_id: str) -> bool:
+        with self.db.get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("DELETE FROM scripts WHERE id = ?", (script_id,))
             conn.commit()
             return cur.rowcount > 0
