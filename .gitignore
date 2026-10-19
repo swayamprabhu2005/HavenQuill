@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+data/
+storybook/
+tests/
+app.py
+run.bat
+requirements.txt
+pytest.ini
+.env*
+docs/
