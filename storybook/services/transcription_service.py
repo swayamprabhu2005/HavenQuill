@@ -145,7 +145,15 @@ class TranscriptionService:
 
             try:
                 # Load small/base quantized model for fast responsive CPU performance
-                model = WhisperModel("base", device="cpu", compute_type="int8")
+                # Isolate model weights to workspace data/whisper_models directory
+                models_dir = config.data_dir / "whisper_models"
+                models_dir.mkdir(parents=True, exist_ok=True)
+                model = WhisperModel(
+                    "base",
+                    device="cpu",
+                    compute_type="int8",
+                    download_root=str(models_dir),
+                )
                 segments, info = model.transcribe(tmp_path, beam_size=3)
                 transcribed_lines = [seg.text.strip() for seg in segments if seg.text.strip()]
                 return " ".join(transcribed_lines).strip()

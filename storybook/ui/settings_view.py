@@ -24,7 +24,7 @@ def render_settings_view() -> None:
     # Section 1: Provider Selection & Routing
     st.subheader("1. Active AI Provider & Routing Policy")
     st.info(
-        "💡 **No API Key Required:** Storybook Studio includes a built-in **Mock Provider** that generates "
+        "💡 **No API Key Required:** HavenQuill includes a built-in **Mock Provider** that generates "
         "deterministic, structured story outlines and scenes completely offline. You do not need paid API keys to "
         "test or use all core story-writing features."
     )
@@ -75,8 +75,8 @@ def render_settings_view() -> None:
 
     gemini_model_input = st.text_input(
         "Gemini Model ID",
-        value=config.gemini_model or "gemini-2.5-flash",
-        help="Recommended: gemini-2.5-flash or gemini-3.8-flash.",
+        value=config.gemini_model or "gemini-3.8-flash",
+        help="Recommended: gemini-3.8-flash or gemini-3.5-flash-lite.",
     )
 
     st.divider()
@@ -84,7 +84,7 @@ def render_settings_view() -> None:
     # Section 3: Groq Configuration
     st.subheader("3. Groq Configuration (Fallback Provider)")
     st.markdown(
-        "Groq delivers ultra-fast open-weight model inference (e.g., Llama 3.3). "
+        "Groq delivers ultra-fast open-weight model inference (e.g., Qwen 3.8 / Llama). "
         "[Get a Groq API Key](https://console.groq.com/keys)"
     )
 
@@ -101,8 +101,8 @@ def render_settings_view() -> None:
 
     groq_model_input = st.text_input(
         "Groq Model ID",
-        value=config.groq_model or "llama-3.3-70b-versatile",
-        help="Recommended: llama-3.3-70b-versatile or llama-3.1-8b-instant.",
+        value=config.groq_model or "qwen/qwen3.8-27b",
+        help="Recommended: qwen/qwen3.8-27b or openai/gpt-oss-120b.",
     )
 
     st.divider()

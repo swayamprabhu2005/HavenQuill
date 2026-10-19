@@ -1,4 +1,4 @@
-"""Storybook Studio - Main Application Entrypoint."""
+"""HavenQuill - Main Application Entrypoint."""
 
 import streamlit as st
 from storybook.config import config
@@ -12,6 +12,7 @@ from storybook.ui.dashboard import render_dashboard
 from storybook.ui.project_editor import render_project_editor
 from storybook.ui.scene_view import render_scene_view
 from storybook.ui.book_view import render_book_view
+from storybook.ui.script_view import render_script_view
 from storybook.ui.story_bible_view import render_story_bible_view
 from storybook.ui.settings_view import render_settings_view
 from storybook.ui.live_scribe_view import render_live_scribe_view
@@ -26,8 +27,8 @@ continuity_service = ContinuityService()
 
 def main():
     st.set_page_config(
-        page_title="Storybook Studio — Creative Sanctuary",
-        page_icon="🌿",
+        page_title="HavenQuill — AI Story & Screenplay Sanctuary",
+        page_icon="🪶",
         layout="wide",
         initial_sidebar_state="expanded",
     )
@@ -106,7 +107,7 @@ def main():
         st.markdown(
             """
             <div style="padding: 10px 0 15px 0;">
-                <h2 style="margin: 0; font-family: Georgia, serif; font-size: 1.6rem;">Storybook Studio</h2>
+                <h2 style="margin: 0; font-family: Georgia, serif; font-size: 1.6rem;">🪶 HavenQuill</h2>
                 <span class="saved-pill">● Local SQLite Active</span>
             </div>
             """,
@@ -145,23 +146,26 @@ def main():
 
         st.markdown("---")
 
-        # Navigation Options
+        # Navigation Options: Book View is default, followed by Script View
         nav_options = [
-            "Dashboard",
+            "📖 Book View",
+            "🎬 Script View",
             "🌿 Live Story Sanctuary",
-            "Project Studio",
-            "Scene & Structure View",
-            "Book View",
-            "Story Bible",
-            "Settings",
+            "📐 Scenes & Structure",
+            "📜 Story Bible",
+            "✍️ Story Studio",
+            "🏠 Dashboard",
+            "⚙️ Settings",
         ]
 
-        active_idx = nav_options.index(st.session_state["active_nav"]) if st.session_state["active_nav"] in nav_options else 0
+        if "active_nav" not in st.session_state or st.session_state["active_nav"] not in nav_options:
+            st.session_state["active_nav"] = "📖 Book View" if projects else "🏠 Dashboard"
+
+        active_idx = nav_options.index(st.session_state["active_nav"])
         selected_nav = st.radio("Navigation", nav_options, index=active_idx, label_visibility="collapsed")
 
         if selected_nav != st.session_state["active_nav"]:
             st.session_state["active_nav"] = selected_nav
-            st.session_state["active_view"] = "dashboard"
             st.rerun()
 
         st.markdown("---")
@@ -179,30 +183,32 @@ def main():
             st.caption("Auto-Fallback: 🟢 Enabled")
 
         st.markdown(
-            "<small style='color: #888;'>Storybook Studio v1.0<br/>Phase 1 Local-First Build</small>",
+            "<small style='color: #888;'>HavenQuill v1.0<br/>Private Local-First Studio</small>",
             unsafe_allow_html=True,
         )
 
     # Route to Views
     target_nav = st.session_state["active_nav"]
 
-    if target_nav == "Dashboard":
+    if target_nav == "🏠 Dashboard":
         render_dashboard(story_service)
-    elif target_nav == "Settings":
+    elif target_nav == "⚙️ Settings":
         render_settings_view()
     elif not current_project:
         st.warning("Please create or select a project from the Dashboard first.")
         render_dashboard(story_service)
+    elif target_nav == "📖 Book View":
+        render_book_view(current_project.id, story_service, outline_service, scene_service)
+    elif target_nav == "🎬 Script View":
+        render_script_view(current_project.id, story_service, outline_service)
     elif target_nav == "🌿 Live Story Sanctuary":
         render_live_scribe_view(current_project.id, story_service, outline_service, scene_service)
-    elif target_nav == "Project Studio":
-        render_project_editor(current_project.id, story_service, outline_service, continuity_service)
-    elif target_nav == "Scene & Structure View":
+    elif target_nav == "📐 Scenes & Structure":
         render_scene_view(current_project.id, story_service, outline_service, scene_service)
-    elif target_nav == "Book View":
-        render_book_view(current_project.id, story_service, outline_service, scene_service)
-    elif target_nav == "Story Bible":
+    elif target_nav == "📜 Story Bible":
         render_story_bible_view(current_project.id, story_service, bible_service)
+    elif target_nav == "✍️ Story Studio":
+        render_project_editor(current_project.id, story_service, outline_service, continuity_service)
 
 
 if __name__ == "__main__":

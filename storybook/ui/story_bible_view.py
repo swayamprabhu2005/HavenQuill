@@ -138,7 +138,7 @@ def render_story_bible_view(
         st.subheader("Canonical World Facts & Lock Safeguards")
         st.info(
             "🔒 **Canon Locking:** Mark essential facts as **Locked**. If future AI generation or editing "
-            "attempts to violate or overwrite a locked fact, Storybook Studio will flag an explicit warning."
+            "attempts to violate or overwrite a locked fact, HavenQuill will flag an explicit warning."
         )
 
         facts = bible_service.list_canon_facts(project_id)

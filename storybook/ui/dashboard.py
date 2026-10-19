@@ -1,4 +1,4 @@
-"""Main Dashboard View for Storybook Studio."""
+"""Main Dashboard View for HavenQuill."""
 
 import streamlit as st
 from datetime import datetime
@@ -20,10 +20,10 @@ def render_dashboard(story_service: StoryService) -> None:
         """
         <div style="padding: 10px 0px 20px 0px;">
             <h1 style="margin: 0; font-family: Georgia, serif; font-weight: normal; font-size: 2.4rem;">
-                📖 Storybook Studio
+                🪶 HavenQuill
             </h1>
             <p style="color: #6c757d; font-size: 1.05rem; margin-top: 5px;">
-                Your private, local-first creative writing assistant and story architect.
+                Your private, local-first story & screenplay sanctuary.
             </p>
         </div>
         """,
@@ -107,16 +107,20 @@ def render_dashboard(story_service: StoryService) -> None:
                 st.write(f"• **{stats['character_count']}** Characters")
                 st.caption(f"Last updated: {proj.updated_at[:10]}")
 
-            with col_act:
                 st.write("&nbsp;")
-                if st.button("Open Studio", key=f"open_{proj.id}", type="primary", use_container_width=True):
+                if st.button("📖 Read Book", key=f"read_{proj.id}", type="primary", use_container_width=True):
                     st.session_state["selected_project_id"] = proj.id
-                    st.session_state["active_nav"] = "Project Studio"
+                    st.session_state["active_nav"] = "📖 Book View"
                     st.rerun()
 
-                if st.button("Read Book", key=f"read_{proj.id}", use_container_width=True):
+                if st.button("🎬 Script View", key=f"script_{proj.id}", use_container_width=True):
                     st.session_state["selected_project_id"] = proj.id
-                    st.session_state["active_nav"] = "Book View"
+                    st.session_state["active_nav"] = "🎬 Script View"
+                    st.rerun()
+
+                if st.button("✍️ Studio", key=f"open_{proj.id}", use_container_width=True):
+                    st.session_state["selected_project_id"] = proj.id
+                    st.session_state["active_nav"] = "✍️ Story Studio"
                     st.rerun()
 
 
@@ -159,7 +163,7 @@ def _render_new_project_form(story_service: StoryService) -> None:
                     premise=premise,
                 )
                 st.session_state["selected_project_id"] = new_proj.id
-                st.session_state["active_nav"] = "Project Studio"
+                st.session_state["active_nav"] = "📖 Book View"
                 st.session_state["active_view"] = "dashboard"
                 st.success(f"Project '{new_proj.title}' created successfully!")
                 st.rerun()
@@ -340,7 +344,7 @@ def _render_backup_hub(story_service: StoryService) -> None:
             st.info("Archive contains complete project JSON, characters, locations, canon facts, and markdown manuscript.")
 
     with tab_restore:
-        st.markdown("**Restore a project from a Storybook Studio ZIP archive:**")
+        st.markdown("**Restore a project from a HavenQuill ZIP archive:**")
         uploaded_zip = st.file_uploader("Upload .zip backup", type=["zip"])
         if uploaded_zip:
             zip_bytes = uploaded_zip.read()
@@ -361,7 +365,7 @@ def _render_backup_hub(story_service: StoryService) -> None:
                     restored = backup_service.restore_project(preview["data"], overwrite_existing=overwrite)
                     st.success(f"Project '{restored.title}' restored successfully!")
                     st.session_state["selected_project_id"] = restored.id
-                    st.session_state["active_nav"] = "Project Studio"
+                    st.session_state["active_nav"] = "📖 Book View"
                     st.session_state["active_view"] = "dashboard"
                     st.rerun()
 

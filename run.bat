@@ -1,12 +1,12 @@
 @echo off
-title Storybook Studio - Creative Sanctuary
+title HavenQuill — AI Story & Screenplay Sanctuary
 color 0A
 
 echo =====================================================================
-echo                 Storybook Studio - Creative Sanctuary
+echo              HavenQuill — AI Story & Screenplay Sanctuary
 echo =====================================================================
 echo.
-echo [1/3] Checking Python Virtual Environment...
+echo [1/4] Checking Python Virtual Environment...
 
 if not exist ".venv\Scripts\python.exe" (
     echo [*] Creating virtual environment (.venv)...
@@ -19,7 +19,26 @@ if not exist ".venv\Scripts\python.exe" (
 )
 
 echo.
-echo [2/3] Checking Environment Configuration (.env)...
+echo [2/4] Verifying Faster-Whisper Local Installation & Model Isolation...
+rem Ensure model weights and cache stay strictly inside local project subfolder (no C drive clutter)
+set WHISPER_CACHE=%~dp0data\whisper_models
+if not exist "%WHISPER_CACHE%" (
+    mkdir "%WHISPER_CACHE%" >nul 2>&1
+)
+set HF_HOME=%WHISPER_CACHE%
+set HF_HUB_CACHE=%WHISPER_CACHE%
+set TORCH_HOME=%WHISPER_CACHE%
+
+.\.venv\Scripts\python.exe -c "import faster_whisper" >nul 2>&1
+if %ERRORLEVEL% neq 0 (
+    echo [*] Faster-Whisper package missing. Installing into project environment...
+    .\.venv\Scripts\pip.exe install faster-whisper
+) else (
+    echo [OK] Faster-Whisper is installed and isolated in %WHISPER_CACHE%.
+)
+
+echo.
+echo [3/4] Checking Environment Configuration (.env)...
 if not exist ".env" (
     echo [*] Creating initial .env from .env.example...
     copy .env.example .env >nul
@@ -38,7 +57,7 @@ echo  inside the application under the Settings tab!
 echo  (The application also works 100%% offline using Mock Provider)
 echo =====================================================================
 echo.
-echo [3/3] Launching Storybook Studio...
+echo [4/4] Launching HavenQuill...
 echo Opening browser at http://localhost:8501 ...
 echo.
 
