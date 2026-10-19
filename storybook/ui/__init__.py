@@ -1,1 +1,1 @@
-"""Streamlit User Interface components for Storybook Studio."""
+"""Streamlit User Interface components for HavenQuill."""

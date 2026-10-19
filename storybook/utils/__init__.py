@@ -1,1 +1,1 @@
-"""Utility functions and helpers for Storybook Studio."""
+"""Utility functions and helpers for HavenQuill."""

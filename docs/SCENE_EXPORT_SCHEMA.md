@@ -2,7 +2,7 @@
 
 ## Overview
 
-Storybook Studio is designed local-first with Phase 1 focusing exclusively on text narrative, story architecture, scene breakdown, continuity tracking, and manuscript rendering.
+HavenQuill is designed local-first with Phase 1 focusing exclusively on text narrative, story architecture, scene breakdown, continuity tracking, and manuscript rendering.
 
 Per project requirements, **image generation, comic panel generation, LoRA training, and video generation are explicitly excluded from Phase 1**. However, the scene records and export schema are designed from the foundation so that Phase 2 can generate image prompts and comic book panels directly from saved scenes without altering the database schema or rebuilding the story engine.
 

@@ -1,4 +1,4 @@
-"""Configuration management for Storybook Studio."""
+"""Configuration management for HavenQuill."""
 
 import os
 from pathlib import Path
@@ -30,7 +30,7 @@ class AppConfig:
             load_dotenv(dotenv_path=self.env_path, override=True)
 
         self.app_env: str = os.getenv("APP_ENV", "development")
-        self.app_name: str = os.getenv("APP_NAME", "Storybook Studio")
+        self.app_name: str = os.getenv("APP_NAME", "HavenQuill")
         self.data_dir_str: str = os.getenv("APP_DATA_DIR", "./data")
         self.data_dir: Path = (BASE_DIR / self.data_dir_str).resolve() if not Path(self.data_dir_str).is_absolute() else Path(self.data_dir_str)
 
@@ -38,13 +38,13 @@ class AppConfig:
         self.ai_auto_fallback: bool = os.getenv("AI_AUTO_FALLBACK", "false").lower() in ("true", "1", "yes")
 
         self.gemini_api_key: str = os.getenv("GEMINI_API_KEY", "").strip()
-        self.gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip()
+        self.gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-3.8-flash").strip()
 
         self.groq_api_key: str = os.getenv("GROQ_API_KEY", "").strip()
-        self.groq_model: str = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile").strip()
+        self.groq_model: str = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b").strip()
 
         self.enable_cloud_transcription: bool = os.getenv("ENABLE_CLOUD_TRANSCRIPTION", "false").lower() in ("true", "1", "yes")
-        self.transcription_provider: str = os.getenv("TRANSCRIPTION_PROVIDER", "none").lower().strip()
+        self.transcription_provider: str = os.getenv("TRANSCRIPTION_PROVIDER", "faster_whisper").lower().strip()
 
         self.log_level: str = os.getenv("LOG_LEVEL", "INFO").upper()
 
@@ -57,6 +57,7 @@ class AppConfig:
         (self.data_dir / "backups").mkdir(parents=True, exist_ok=True)
         (self.data_dir / "exports").mkdir(parents=True, exist_ok=True)
         (self.data_dir / "audio").mkdir(parents=True, exist_ok=True)
+        (self.data_dir / "whisper_models").mkdir(parents=True, exist_ok=True)
 
     @property
     def db_path(self) -> Path:

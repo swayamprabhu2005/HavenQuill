@@ -1,1 +1,1 @@
-"""AI Providers for Storybook Studio."""
+"""AI Providers for HavenQuill."""

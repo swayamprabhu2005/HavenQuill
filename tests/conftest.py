@@ -1,4 +1,4 @@
-"""Pytest fixtures and configuration for Storybook Studio test suite."""
+"""Pytest fixtures and configuration for HavenQuill test suite."""
 
 import pytest
 import tempfile

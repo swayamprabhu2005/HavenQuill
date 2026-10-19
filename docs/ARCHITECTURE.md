@@ -1,8 +1,8 @@
-# Storybook Studio — Technical Architecture Document
+# HavenQuill — Technical Architecture Document
 
 ## 1. System Vision & Philosophy
 
-**Storybook Studio** is a private, local-first personal AI-assisted story-writing and storybook application. It empowers writers to capture voice or typed ideas, develop rich narrative architecture, manage chapters and scenes, maintain world continuity, read their manuscript in a book-like interface, and export publication-ready assets (PDF, DOCX, Markdown, JSON, ZIP backups).
+**HavenQuill** is a private, local-first personal AI-assisted story-writing and storybook application. It empowers writers to capture voice or typed ideas, develop rich narrative architecture, manage chapters and scenes, maintain world continuity, read their manuscript in a book-like interface, and export publication-ready assets (PDF, DOCX, Markdown, JSON, ZIP backups).
 
 ### Core Architectural Tenets
 1. **Local-First & Private**: Stories, drafts, world bible records, and audio stay strictly local on the author's machine in SQLite. No telemetry, no public sharing, and no mandatory cloud dependencies.

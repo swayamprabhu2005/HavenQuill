@@ -1,1 +1,1 @@
-"""Service layer for Storybook Studio."""
+"""Service layer for HavenQuill."""

@@ -1,4 +1,4 @@
-"""Base AI Provider interface for Storybook Studio."""
+"""Base AI Provider interface for HavenQuill."""
 
 from abc import ABC, abstractmethod
 from typing import Optional, List, Dict, Any
