@@ -28,8 +28,8 @@ class GeminiProvider(BaseAIProvider):
     """
 
     def __init__(self, api_key: Optional[str] = None, model_name: Optional[str] = None):
-        self.api_key = (api_key or config.gemini_api_key or "").strip()
-        self.model_name = (model_name or config.gemini_model or "gemini-2.5-flash").strip()
+        self.api_key = (api_key if api_key is not None else (config.gemini_api_key or "")).strip()
+        self.model_name = (model_name or config.gemini_model or "gemini-3.8-flash").strip()
         self._client = None
 
     def _get_client(self):

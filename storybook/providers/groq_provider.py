@@ -28,8 +28,8 @@ class GroqProvider(BaseAIProvider):
     """
 
     def __init__(self, api_key: Optional[str] = None, model_name: Optional[str] = None):
-        self.api_key = (api_key or config.groq_api_key or "").strip()
-        self.model_name = (model_name or config.groq_model or "llama-3.3-70b-versatile").strip()
+        self.api_key = (api_key if api_key is not None else (config.groq_api_key or "")).strip()
+        self.model_name = (model_name or config.groq_model or "qwen/qwen3.8-27b").strip()
         self._client = None
 
     def _get_client(self):

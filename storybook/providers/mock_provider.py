@@ -43,6 +43,32 @@ class MockProvider(BaseAIProvider):
         }
 
     def generate_text(self, prompt: str, system_instruction: Optional[str] = None) -> str:
+        prompt_lower = prompt.lower()
+        sys_lower = (system_instruction or "").lower()
+
+        if "screenplay" in prompt_lower or "script" in prompt_lower or "screenplay" in sys_lower:
+            return (
+                "FADE IN:\n\n"
+                "INT. GRAND ARCHIVE - NIGHT\n\n"
+                "Rain taps rhythmically against high arched stained-glass windows.\n"
+                "ELENA VANCE (30s), wearing an oil-stained apron, inspects a brass chronometer.\n\n"
+                "ELENA\n"
+                "(whispering)\n"
+                "The gears shouldn't move counter-clockwise. Unless...\n\n"
+                "A distant heavy iron door SLAMS. Footsteps echo on cobblestone.\n\n"
+                "SILAS (O.S.)\n"
+                "Elena! Put that down. They've crossed the courtyard perimeter.\n\n"
+                "Elena quickly pockets the device and turns toward the shadows.\n\n"
+                "CUT TO:\n\n"
+                "INT. UNDERCITY TUNNEL - CONTINUOUS\n\n"
+                "Steam billows from rusted iron valves. Elena and Silas sprint through knee-deep water.\n\n"
+                "ELENA\n"
+                "How far to the secondary sluice gate?\n\n"
+                "SILAS\n"
+                "Two hundred yards. If the pressure holds!\n\n"
+                "FADE OUT."
+            )
+
         return (
             "[Mock Provider Output]\n"
             "The ancient clocktower struck midnight as the rain drummed softly against the glass. "
