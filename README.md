@@ -1,185 +1,179 @@
-# 📖 Storybook Studio
+# 🌿 Storybook Studio (HavenScribe)
+### *A Private, Local-First AI Story-Writing & Creative Sanctuary*
 
-**Storybook Studio** is a private, local-first personal AI-assisted story-writing and storybook application. It allows you to speak your ideas, type rough drafts, paste notes, or import existing manuscripts, and turn them into structured stories with chapters, scenes, characters, locked canon facts, and publication-ready exports.
+**Storybook Studio** is a private, local-first personal AI-assisted story-writing and storybook application designed with a soothing, anxiety-free atmosphere. It allows you to speak your thoughts, type rough drafts, paste notes, or import existing manuscripts, and gently develop them into cohesive stories with chapters, scenes, characters, locked canon facts, and publication-ready exports.
+
+---
+
+## ⚡ Quick Start: Single-Click Windows Launch
+
+To launch the entire application with one click on Windows, double-click:
+```bat
+run.bat
+```
+`run.bat` automatically:
+1. Checks for a Python installation.
+2. Creates and configures the isolated `.venv` virtual environment if needed.
+3. Installs or updates dependencies from `requirements.txt`.
+4. Copies `.env.example` to `.env` if no `.env` exists.
+5. Displays direct links to generate your Gemini and Groq API keys.
+6. Launches the application in your default browser at `http://localhost:8501`.
+
+---
+
+## 🔑 Direct Links to Generate API Keys
+
+Storybook Studio works **100% offline out-of-the-box with the Mock Provider** (no API keys required). When you are ready to enable cloud AI models, generate your keys here:
+
+| Provider | Purpose | Direct Key Generation Link | Recommended Default Model |
+| :--- | :--- | :--- | :--- |
+| **Google Gemini** | Primary AI Prose & Reasoning Engine | [Google AI Studio API Keys](https://aistudio.google.com/apikey) | `gemini-2.5-flash` |
+| **Groq Cloud** | High-Speed Fallback Engine | [Groq Console API Keys](https://console.groq.com/keys) | `llama-3.3-70b-versatile` |
+
+Paste your keys directly into `.env` or navigate to **Settings** in the application sidebar.
+
+---
+
+## 🎙️ Spoken Dictation: Fast Whisper vs. Audio Recording
+
+### Clarification: What is Fast Whisper?
+- **Faster-Whisper is strictly for Transcribing (Speech-to-Text)**: It is a CTranslate2 reimplementation of OpenAI's Whisper model that decodes audio bytes into text on your local CPU up to 4x faster with 8-bit quantization. It does **not** record audio from your microphone hardware.
+- **Audio Recording**: Handled natively and privately by your browser's Web Audio microphone via Streamlit's `st.audio_input` or by uploading audio files (`.wav`, `.mp3`, `.m4a`, `.ogg`). The recorded audio is decoded locally by Faster-Whisper with zero telemetry or cloud transmission.
+
+---
+
+## 🛡️ Agentic RAG Rolling Memory Engine & Credit Protection
+
+When generating a story across multiple spoken or typed sections, sending thousands of words of past transcripts into Gemini on every turn wastes API credits, burns through token limits, and triggers HTTP 429 rate limits.
+
+Storybook Studio solves this with its **Agentic RAG Rolling Memory Engine**:
+1. **Segmented Story Flow**: Spoken or typed input is gathered into an active segment.
+2. **Word Target & Progress Tracker**: Select a target limit (300, 500, or 1,000 words). A progress bar visualizes how close your active part is to the target.
+3. **Verbal Keyword Boundary Detection**: Saying *"para one end"*, *"para end"*, *"paragraph end"*, or *"next part"* automatically strips the keyword, seals the segment, and prepares it for transformation.
+4. **Agentic RAG Context Packet**: When sent to Gemini, the engine compresses previous story history into:
+   - **Locked Canon Facts**: Immutable world rules and character facts.
+   - **Active Characters**: Names and core traits.
+   - **Narrative Bridge**: The exact last 2 sentences of the immediately preceding committed part to ensure seamless prose flow.
+   - **Rolling Story Recap**: A distilled multi-point recap of recent parts.
+   - **Estimated Credit Savings**: Saves 80% to 90% of tokens on every request.
+5. **Clear Canon Commitment Divider**: Once processed, a distinct visual divider appears:
+   ```
+   ✓ [Committed to Story Canon — Part 1]
+   ```
+   Committed parts are sealed and cannot be accidentally overwritten.
+6. **Rethink with Gemini**: Modify or refine the active segment by providing author feedback without re-sending or altering previous committed parts.
+
+---
+
+## 🎨 Soothing & Anxiety-Free Visual Design
+
+Writing should be peaceful and reflective. The interface is styled with a natural, calming sanctuary theme:
+- **Linen Background**: `#FAF8F5` replaces harsh stark whites with soft book paper.
+- **Forest Sage Accents**: `#386641` buttons and borders promote focus and tranquility.
+- **Soft Border Radii & Warm Shadows**: Rounded, card-like containers inspired by physical stationery.
+- **Readable Typography**: High-contrast, gentle serifs and sans-serifs for effortless reading and editing.
 
 ---
 
 ## 🌟 Key Features
 
-1. **Voice & Audio Input**: Browser-based microphone recording or audio file upload (WAV, MP3, M4A, OGG) with preview, playback, and transcript editing before saving.
+1. **Live Story Sanctuary**: Continuous streaming dictation and typing with Fast Whisper transcription, word targets, keyword boundary detection, and Gemini transformation.
 2. **Text Input & Manuscript Import**: Freeform text editor, draft preservation, and full import support for `.txt`, `.md`, `.pdf`, and `.docx` manuscripts.
-3. **AI-Assisted Story Development**: Generates loglines, short & detailed synopses, thematic motifs, character goals, dramatic conflicts, turning points, open questions, and assumptions.
-4. **Structured Outlining**: Generates multi-chapter outlines, character arcs, revelations, and setup/payoff tracking with section-by-section regeneration.
-5. **Scene Management & Drafting**: Detailed scene cards with POV, locations, time markers, emotional shifts, dramatic beats, reordering, duplicate, split, merge, and prose drafting/rewriting.
-6. **Future Image & Comic Compatibility**: Natively stores visual panel metadata (`camera_framing`, `mood_atmosphere`, `visual_summary`, `characters_present`) ready for Phase 2 image and comic pipelines.
-7. **Story Bible & Canon Locking**: Manage characters, locations, timeline events, and lock critical facts (`is_locked`) with automatic contradiction warnings.
-8. **Book View**: A distraction-reduced book reader with cover page, table of contents, font controls (size & style), reading progress, word count estimation, and inline prose editing.
-9. **Multi-Format Exports & Backups**:
+3. **AI-Assisted Story Development**: Generates loglines, synopses, thematic motifs, character goals, dramatic conflicts, and turning points.
+4. **Structured Outlines & Scenes**: Generates multi-chapter outlines with scene breakdown, POV tracking, emotional shifts, dramatic beats, and reordering.
+5. **Future Image & Comic Compatibility**: Natively stores visual panel metadata (`camera_framing`, `mood_atmosphere`, `visual_summary`, `characters_present`) ready for future image generation without rebuilding the engine.
+6. **Story Bible & Canon Locking**: Manage characters, locations, timeline events, and lock critical facts (`is_locked`) with automatic contradiction warnings.
+7. **Book View**: A distraction-reduced book reader with cover page, table of contents, font controls, reading progress, and inline prose editing.
+8. **Multi-Format Exports & Safe Backups**:
    - Professional PDF book via ReportLab (with title page, table of contents, page numbers, clean margins)
    - Microsoft Word `.docx` manuscript
    - Markdown manuscript
    - Full structured JSON export
-   - Safe self-contained ZIP project backup & restore with ID conflict protection
-10. **Three-Tier AI Provider System**:
-    - **Mock Provider**: 100% offline, zero API keys required, deterministic structured output for development and automated testing.
-    - **Google Gemini**: Primary cloud provider using the official modern `google-genai` SDK.
-    - **Groq**: High-speed fallback provider using the official `groq` SDK.
-    - **Configurable Fallback Policy**: Automatically routes temporary rate limits (429) from Gemini to Groq when enabled.
+   - Safe self-contained ZIP project backup & restore with ID conflict protection and secret exclusion.
+9. **Three-Tier AI Provider System**:
+   - **Mock Provider**: 100% offline, zero API keys required, deterministic structured output for development and automated testing.
+   - **Google Gemini**: Primary cloud provider using the official modern `google-genai` SDK.
+   - **Groq**: High-speed fallback provider using the official `groq` SDK with automatic rate-limit failover.
 
 ---
 
-## 🛠️ Windows Installation & Setup Guide
+## 💡 Recommended Platform Names
+
+If you want to brand your platform or personal website, here are four curated names:
+
+1. **HavenScribe** *(Recommended)*: Evokes a safe, tranquil harbor for writers to record their raw thoughts and watch them blossom into literature.
+2. **Storybook Sanctuary**: Highlights the private, peaceful retreat feel with zero distractions and calming aesthetic.
+3. **AuraStory**: Represents the gentle, radiant flow of spoken words evolving into written chapters.
+4. **WhisperQuill**: Captures the synergy between fast voice dictation (Whisper) and timeless storytelling craftsmanship (Quill).
+
+---
+
+## 🛠️ Windows Installation & Manual Setup
 
 ### Prerequisites
 - Windows 10 or 11
 - Python 3.10 or 3.11 installed and added to `PATH`
-- Standard audio microphone (for voice recording)
+- Standard microphone
 
-### 1. Clone or Open Workspace
-Open PowerShell in the project directory:
+### 1. Open Terminal
 ```powershell
 cd d:\MyFiles\Story-Generator
 ```
 
-### 2. Create and Activate Virtual Environment
+### 2. Set Up Virtual Environment
 ```powershell
-# Create virtual environment
 python -m venv .venv
-
-# Activate virtual environment
 .\.venv\Scripts\Activate.ps1
 ```
-*(If PowerShell restricts script execution, run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` first).*
 
 ### 3. Install Dependencies
 ```powershell
 .\.venv\Scripts\pip.exe install -r requirements.txt
 ```
 
----
-
-## 🚀 Exact Application Launch Command
-
-Run the application with Streamlit:
+### 4. Run the Application
 ```powershell
 .\.venv\Scripts\streamlit.exe run app.py
 ```
-Or with Python:
-```powershell
-.\.venv\Scripts\python.exe -m streamlit run app.py
-```
-
-The application will launch and open in your default browser at `http://localhost:8501`.
+Or simply run `run.bat`!
 
 ---
 
-## 🔑 AI Provider Configuration
+## 🧪 Automated Test Suite
 
-Storybook Studio works out of the box with **Mock Provider** without any API keys. When you are ready to use cloud AI engines:
-
-### 1. Google Gemini Setup (Primary Provider)
-1. Obtain an API key from [Google AI Studio](https://aistudio.google.com/apikey).
-2. Open **Settings** in the Storybook Studio sidebar or edit `.env`:
-   ```env
-   AI_PROVIDER=gemini
-   GEMINI_API_KEY=your_actual_gemini_api_key_here
-   GEMINI_MODEL=gemini-2.5-flash
-   ```
-3. Supported models: `gemini-2.5-flash`, `gemini-3.8-flash`, etc.
-
-### 2. Groq Setup (Fallback Provider)
-1. Obtain an API key from [Groq Console](https://console.groq.com/keys).
-2. Open **Settings** in the Storybook Studio sidebar or edit `.env`:
-   ```env
-   GROQ_API_KEY=your_actual_groq_api_key_here
-   GROQ_MODEL=llama-3.3-70b-versatile
-   ```
-3. Supported models: `llama-3.3-70b-versatile`, `llama-3.1-8b-instant`, etc.
-
-### 3. Provider Fallback Policy
-In the **Settings** view, toggle **Enable Automatic Fallback (Gemini ➔ Groq)**.
-- If Gemini encounters temporary quota or rate limits (HTTP 429), Storybook Studio automatically completes the request using Groq.
-- Fallback will **not** trigger on invalid keys or malformed requests, ensuring errors are never masked silently.
-
----
-
-## 🎙️ Voice & Audio Dictation
-
-1. From the Dashboard, click **Voice & Audio Capture**.
-2. **Microphone Recording**: Click the native browser microphone recorder to dictate your story ideas.
-3. **Audio File Upload**: Upload any `.wav`, `.mp3`, `.m4a`, or `.ogg` recording.
-4. **Transcription**:
-   - Use `mock` for instant offline testing.
-   - Configure `gemini` or `groq` (Whisper API) under **Settings** for cloud transcription.
-   - Always review and edit your transcript before clicking **Save as Source Draft**.
-
----
-
-## 📦 Backups and Safe Restore
-
-- **Export Archive**: In the Dashboard, click **Backup & Restore ➔ Export Project Archive** to download a self-contained `.zip` package.
-- **Safe Restore**:
-  - The restore engine validates the archive and previews title, genre, chapter count, and character count before applying changes.
-  - Automatically avoids ID collisions by generating fresh identifiers when restoring duplicates, or optionally overwriting if explicitly selected.
-  - **Secrets are strictly excluded**: Backup ZIP archives reject and omit API keys and credentials.
-
----
-
-## 🧪 Running Automated Tests
-
-Run the full pytest suite:
+Run the full pytest suite (33 tests covering all database, models, providers, fallback logic, Agentic RAG, and exports):
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -v
 ```
 
-The test suite covers:
-- SQLite database creation, schema version, and WAL mode
-- Project data isolation and cascading deletions
-- Source draft preservation separate from prose
-- Version history snapshot recording
-- Chapter and scene reordering, splitting, and merging
-- Pydantic structured output validation
-- MockProvider end-to-end workflow (100% offline)
-- Missing API key and malformed response error handling for Gemini and Groq
-- Fallback policy execution on temporary 429 errors
-- PDF book generation with ReportLab
-- DOCX export with python-docx
-- Markdown manuscript export
-- Backup ZIP creation, preview, and conflict resolution
-- Secret exclusion from exports
+### Test Coverage Highlights:
+- **`test_agentic_rag.py`**: Segment CRUD, keyword boundary detection ("para one end"), Agentic context packet assembly, word/credit savings calculation, and segment rethink without touching history.
+- **`test_database.py`**: SQLite WAL mode, cascading deletes, project isolation, and chapter/scene reordering.
+- **`test_models.py`**: Pydantic schema validation, scene visual panel metadata for future image generation.
+- **`test_providers.py` & `test_provider_manager.py`**: Mock provider offline workflows, missing API key handling, malformed response resilience, and automatic fallback routing.
+- **`test_services.py`**: Story development, outline generation, scene drafting, story bible canon locking, and continuity audits.
+- **`test_exports_and_backups.py`**: ReportLab PDF generation, python-docx exports, Markdown exports, ZIP backup creation, preview, and safe restore.
 
 ---
 
-## 🔧 Troubleshooting Guide
-
-| Issue | Cause | Solution |
-| :--- | :--- | :--- |
-| **Streamlit does not open** | Port 8501 is in use or firewall blocks local traffic. | Run `.\.venv\Scripts\streamlit.exe run app.py --server.port 8502` |
-| **`Gemini API key is not configured`** | `GEMINI_API_KEY` is blank in `.env`. | Go to **Settings** in the sidebar and enter your key, or select `mock` provider. |
-| **`Groq API key is not configured`** | `GROQ_API_KEY` is blank in `.env`. | Enter your Groq key in **Settings** or disable auto-fallback. |
-| **Microphone not recording in browser** | Browser permissions blocked. | Allow microphone access in your browser address bar settings, or use the **Upload Audio File** tab. |
-| **PDF export font warnings** | Special Unicode glyphs in text. | Standard punctuation is normalized automatically; ReportLab uses Times-Roman and Helvetica. |
-| **Database locked error** | Another process is holding an exclusive lock. | The database uses SQLite WAL mode to prevent locks. Ensure no external DB browser holds exclusive locks. |
-
----
-
-## 📂 Project Structure
+## 📂 Project Architecture
 
 ```
 d:\MyFiles\Story-Generator\
-├── app.py                     # Streamlit application entry point
-├── requirements.txt           # Python dependencies
+├── app.py                     # Streamlit application entry point & soothing theme
+├── run.bat                    # Single-click Windows launcher
+├── requirements.txt           # Python dependencies (faster-whisper, google-genai, groq, etc.)
 ├── pytest.ini                 # Pytest configuration
-├── .env.example               # Safe environment configuration template
-├── .env                       # Local environment configuration (git ignored)
+├── .env.example               # Environment template with recommended models
+├── .env                       # Local API keys (git-ignored)
 ├── .gitignore                 # Excludes .venv, data, logs, and secrets
 ├── README.md                  # Comprehensive manual and installation guide
 │
 ├── storybook/                 # Core application package
 │   ├── config.py              # Configuration manager & key masking
-│   ├── database.py            # SQLite connection, schema, WAL mode
+│   ├── database.py            # SQLite connection, schema, WAL mode, story_segments
 │   ├── models.py              # Pydantic models & structured schemas
-│   ├── repositories.py        # Database CRUD repositories
+│   ├── repositories.py        # Database CRUD repositories (including StorySegmentRepository)
 │   │
 │   ├── providers/             # AI generation providers
 │   │   ├── base.py            # BaseAIProvider abstract interface
@@ -189,17 +183,19 @@ d:\MyFiles\Story-Generator\
 │   │   └── provider_manager.py# Routing & fallback coordinator
 │   │
 │   ├── services/              # Application business logic
+│   │   ├── agentic_rag_service.py # RAG rolling memory, boundary detection, credit saving
 │   │   ├── story_service.py   # Project lifecycle & development
 │   │   ├── outline_service.py # Chapter outlines & ordering
 │   │   ├── scene_service.py   # Scene breakdown, drafting & reorder
 │   │   ├── character_service.py# Story bible & canon locking
 │   │   ├── continuity_service.py# Narrative consistency reviewer
-│   │   ├── transcription_service.py# Voice capture & speech-to-text
+│   │   ├── transcription_service.py# Faster-Whisper local CPU transcription
 │   │   ├── export_service.py  # PDF, MD, DOCX, JSON exports
 │   │   └── backup_service.py  # Self-contained project ZIP archives
 │   │
 │   ├── ui/                    # Streamlit views
 │   │   ├── dashboard.py       # Creative workspace dashboard
+│   │   ├── live_scribe_view.py# Live Story Sanctuary (Voice & Agentic RAG)
 │   │   ├── project_editor.py  # Multi-step story creation studio
 │   │   ├── scene_view.py      # Scene cards & visual panel metadata
 │   │   ├── book_view.py       # Book reader & inline prose editor
@@ -209,14 +205,14 @@ d:\MyFiles\Story-Generator\
 │   └── utils/
 │       └── sample_project.py  # Seedable fictional demo project
 │
-├── tests/                     # Automated test suite (28 tests)
-│   ├── conftest.py
-│   ├── test_database.py
-│   ├── test_models.py
-│   ├── test_providers.py
-│   ├── test_provider_manager.py
-│   ├── test_services.py
-│   └── test_exports_and_backups.py
+├── tests/                     # Automated test suite (33 passing tests)
+│   ├── test_agentic_rag.py    # Agentic RAG & Story Segment tests
+│   ├── test_database.py       # SQLite database tests
+│   ├── test_models.py         # Pydantic schema tests
+│   ├── test_providers.py      # Provider tests
+│   ├── test_provider_manager.py # Fallback & routing tests
+│   ├── test_services.py       # Story & continuity services tests
+│   └── test_exports_and_backups.py # Export & backup tests
 │
 ├── docs/                      # Architectural specifications
 │   ├── ARCHITECTURE.md        # Technical design and architecture

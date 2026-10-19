@@ -117,7 +117,7 @@ def render_settings_view() -> None:
         help="When enabled, audio clips may be sent to the chosen cloud provider for speech-to-text processing.",
     )
 
-    transcription_options = ["none", "mock", "gemini", "groq"]
+    transcription_options = ["faster_whisper", "groq", "gemini", "mock", "none"]
     current_t_idx = transcription_options.index(config.transcription_provider) if config.transcription_provider in transcription_options else 0
 
     transcription_provider = st.selectbox(
@@ -125,10 +125,11 @@ def render_settings_view() -> None:
         transcription_options,
         index=current_t_idx,
         format_func=lambda x: {
-            "none": "None (Manual text input or review only)",
-            "mock": "Mock Engine (Local offline demonstration)",
+            "faster_whisper": "Fast Whisper (Local CPU / No API Key Needed - Recommended)",
+            "groq": "Groq Whisper API (whisper-large-v3, Cloud Ultra-Fast)",
             "gemini": "Gemini Multimodal Audio Transcription",
-            "groq": "Groq Whisper API (whisper-large-v3)",
+            "mock": "Mock Engine (Local offline demonstration)",
+            "none": "None (Manual text input or review only)",
         }.get(x, x),
     )
 

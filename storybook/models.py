@@ -139,6 +139,18 @@ class VersionHistory(BaseModel):
     reason: str = "Manual edit or AI generation"
 
 
+class StorySegment(BaseModel):
+    id: str = Field(default_factory=generate_uuid)
+    project_id: str
+    segment_index: int = 1
+    raw_input: str
+    generated_prose: str = ""
+    status: str = "pending"  # pending, processed
+    word_count: int = 0
+    created_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    updated_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+
 # ============================================================
 # Structured Output AI Schemas
 # ============================================================

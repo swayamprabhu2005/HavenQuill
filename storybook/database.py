@@ -157,12 +157,27 @@ CREATE TABLE IF NOT EXISTS version_history (
     reason TEXT DEFAULT 'Manual edit or AI generation'
 );
 
+-- Live Story Scribe Segments (Streaming Flow & RAG Memory)
+CREATE TABLE IF NOT EXISTS story_segments (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL,
+    segment_index INTEGER NOT NULL,
+    raw_input TEXT NOT NULL,
+    generated_prose TEXT DEFAULT '',
+    status TEXT DEFAULT 'pending', -- pending, processed
+    word_count INTEGER DEFAULT 0,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
+
 -- Performance and isolation indexes
 CREATE INDEX IF NOT EXISTS idx_drafts_project ON source_drafts(project_id);
 CREATE INDEX IF NOT EXISTS idx_chapters_project ON chapters(project_id, order_index);
 CREATE INDEX IF NOT EXISTS idx_scenes_chapter ON scenes(chapter_id, order_index);
 CREATE INDEX IF NOT EXISTS idx_characters_project ON characters(project_id);
 CREATE INDEX IF NOT EXISTS idx_locations_project ON locations(project_id);
+CREATE INDEX IF NOT EXISTS idx_segments_project ON story_segments(project_id, segment_index);
 CREATE INDEX IF NOT EXISTS idx_canon_project ON canon_facts(project_id);
 CREATE INDEX IF NOT EXISTS idx_events_project ON story_events(project_id, order_index);
 CREATE INDEX IF NOT EXISTS idx_version_entity ON version_history(entity_type, entity_id);

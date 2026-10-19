@@ -14,6 +14,7 @@ from storybook.ui.scene_view import render_scene_view
 from storybook.ui.book_view import render_book_view
 from storybook.ui.story_bible_view import render_story_bible_view
 from storybook.ui.settings_view import render_settings_view
+from storybook.ui.live_scribe_view import render_live_scribe_view
 
 # Initialize Services
 story_service = StoryService()
@@ -25,43 +26,71 @@ continuity_service = ContinuityService()
 
 def main():
     st.set_page_config(
-        page_title="Storybook Studio",
-        page_icon="📖",
+        page_title="Storybook Studio — Creative Sanctuary",
+        page_icon="🌿",
         layout="wide",
         initial_sidebar_state="expanded",
     )
 
-    # Custom Clean Typography and Workspace Styling
+    # Natural, Calming, Soothing Sanctuary Theme
     st.markdown(
         """
         <style>
-            /* Main typography */
+            /* Calming Base Palette */
+            .stApp {
+                background-color: #FAF8F5;
+                color: #2D3748;
+            }
             .main .block-container {
-                max-width: 1100px;
-                padding-top: 2rem;
+                max-width: 1060px;
+                padding-top: 1.8rem;
                 padding-bottom: 4rem;
             }
-            /* Sidebar style */
+            /* Soothing Sidebar in Soft Linen / Warm Cream */
             [data-testid="stSidebar"] {
-                background-color: #fbfbfc;
-                border-right: 1px solid #e9ecef;
+                background-color: #F4EFEA;
+                border-right: 1px solid #E6DED6;
             }
-            /* Clean button aesthetics */
+            /* Soft Sage Primary Buttons */
             button[kind="primary"] {
-                border-radius: 6px;
+                background-color: #386641 !important;
+                border-color: #2F5636 !important;
+                color: #FFFFFF !important;
+                border-radius: 8px;
+                font-weight: 500;
+                transition: all 0.2s ease-in-out;
+            }
+            button[kind="primary"]:hover {
+                background-color: #2A4E31 !important;
+                border-color: #24422A !important;
+                box-shadow: 0 2px 6px rgba(40, 80, 50, 0.2);
             }
             button[kind="secondary"] {
-                border-radius: 6px;
+                background-color: #FFFFFF !important;
+                border: 1px solid #D5CCC2 !important;
+                border-radius: 8px;
+                color: #3D4852 !important;
             }
-            /* Saved indicator pill */
+            button[kind="secondary"]:hover {
+                background-color: #F8F5F0 !important;
+                border-color: #B8ACA0 !important;
+            }
+            /* Calming Cards & Containers */
+            [data-testid="stVerticalBlock"] > div[data-testid="stContainer"] {
+                background-color: #FFFFFF;
+                border-radius: 10px;
+                border: 1px solid #EAE3DA;
+            }
+            /* Peaceful Saved indicator pill */
             .saved-pill {
                 display: inline-block;
-                padding: 3px 8px;
+                padding: 4px 10px;
                 font-size: 0.75rem;
-                border-radius: 12px;
-                background-color: #e8f5e9;
-                color: #2e7d32;
+                border-radius: 14px;
+                background-color: #E2EDE3;
+                color: #275231;
                 font-weight: 600;
+                letter-spacing: 0.3px;
             }
         </style>
         """,
@@ -119,6 +148,7 @@ def main():
         # Navigation Options
         nav_options = [
             "Dashboard",
+            "🌿 Live Story Sanctuary",
             "Project Studio",
             "Scene & Structure View",
             "Book View",
@@ -163,6 +193,8 @@ def main():
     elif not current_project:
         st.warning("Please create or select a project from the Dashboard first.")
         render_dashboard(story_service)
+    elif target_nav == "🌿 Live Story Sanctuary":
+        render_live_scribe_view(current_project.id, story_service, outline_service, scene_service)
     elif target_nav == "Project Studio":
         render_project_editor(current_project.id, story_service, outline_service, continuity_service)
     elif target_nav == "Scene & Structure View":

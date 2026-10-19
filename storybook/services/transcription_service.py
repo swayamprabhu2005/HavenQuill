@@ -49,15 +49,21 @@ class TranscriptionService:
 
         if provider_name == "mock":
             return self._transcribe_mock(), "mock"
+        elif provider_name in ("faster_whisper", "fast_whisper", "whisper_local"):
+            return self._transcribe_faster_whisper(audio_bytes, filename), "faster_whisper"
         elif provider_name == "groq":
             return self._transcribe_groq(audio_bytes, filename), "groq"
         elif provider_name == "gemini":
             return self._transcribe_gemini(audio_bytes, filename), "gemini"
         else:
-            return (
-                "Transcription provider is set to 'none'. You can type or paste your spoken ideas manually here.",
-                "none"
-            )
+            # If faster_whisper is available, try faster_whisper by default!
+            try:
+                return self._transcribe_faster_whisper(audio_bytes, filename), "faster_whisper"
+            except Exception:
+                return (
+                    "Transcription provider is set to 'none'. You can type or paste your spoken ideas manually here.",
+                    "none"
+                )
 
     def _transcribe_mock(self) -> str:
         return (
@@ -124,6 +130,34 @@ class TranscriptionService:
         except Exception as e:
             logger.error(f"Gemini transcription error: {e}")
             raise RuntimeError(f"Gemini audio transcription failed: {e}") from e
+
+    def _transcribe_faster_whisper(self, audio_bytes: bytes, filename: str) -> str:
+        """Transcribe speech locally on CPU using faster-whisper without requiring an API key."""
+        try:
+            from faster_whisper import WhisperModel
+            import tempfile
+
+            # Save temporary file for CTranslate2 audio reader
+            suffix = Path(filename).suffix or ".wav"
+            with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+                tmp.write(audio_bytes)
+                tmp_path = tmp.name
+
+            try:
+                # Load small/base quantized model for fast responsive CPU performance
+                model = WhisperModel("base", device="cpu", compute_type="int8")
+                segments, info = model.transcribe(tmp_path, beam_size=3)
+                transcribed_lines = [seg.text.strip() for seg in segments if seg.text.strip()]
+                return " ".join(transcribed_lines).strip()
+            finally:
+                if os.path.exists(tmp_path):
+                    try:
+                        os.remove(tmp_path)
+                    except Exception:
+                        pass
+        except Exception as e:
+            logger.error(f"Faster-Whisper local transcription failed: {e}")
+            raise RuntimeError(f"Fast Whisper speech-to-text failed: {e}") from e
 
 
 transcription_service = TranscriptionService()

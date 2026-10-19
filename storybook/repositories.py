@@ -9,7 +9,7 @@ from typing import List, Optional, Dict, Any
 from storybook.database import DatabaseManager, db_manager
 from storybook.models import (
     Project, SourceDraft, Chapter, Scene, Character, Location,
-    CanonFact, StoryEvent, AIJob, VersionHistory
+    CanonFact, StoryEvent, AIJob, VersionHistory, StorySegment
 )
 
 logger = logging.getLogger(__name__)
@@ -803,3 +803,95 @@ class AIJobRepository:
                     updated_at=row["updated_at"]
                 ))
         return jobs
+
+
+class StorySegmentRepository:
+    """Repository for managing live continuous story flow segments."""
+
+    def __init__(self, db: DatabaseManager = db_manager):
+        self.db = db
+
+    def create(self, segment: StorySegment) -> StorySegment:
+        with self.db.get_connection() as conn:
+            conn.execute(
+                """
+                INSERT INTO story_segments (
+                    id, project_id, segment_index, raw_input,
+                    generated_prose, status, word_count, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    segment.id, segment.project_id, segment.segment_index,
+                    segment.raw_input, segment.generated_prose, segment.status,
+                    segment.word_count, segment.created_at, segment.updated_at
+                )
+            )
+            conn.commit()
+        return segment
+
+    def get(self, segment_id: str) -> Optional[StorySegment]:
+        with self.db.get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM story_segments WHERE id = ?", (segment_id,))
+            row = cur.fetchone()
+            if not row:
+                return None
+            return StorySegment(
+                id=row["id"],
+                project_id=row["project_id"],
+                segment_index=row["segment_index"],
+                raw_input=row["raw_input"],
+                generated_prose=row["generated_prose"],
+                status=row["status"],
+                word_count=row["word_count"],
+                created_at=row["created_at"],
+                updated_at=row["updated_at"]
+            )
+
+    def list_by_project(self, project_id: str) -> List[StorySegment]:
+        segments = []
+        with self.db.get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT * FROM story_segments WHERE project_id = ? ORDER BY segment_index ASC",
+                (project_id,)
+            )
+            for row in cur.fetchall():
+                segments.append(StorySegment(
+                    id=row["id"],
+                    project_id=row["project_id"],
+                    segment_index=row["segment_index"],
+                    raw_input=row["raw_input"],
+                    generated_prose=row["generated_prose"],
+                    status=row["status"],
+                    word_count=row["word_count"],
+                    created_at=row["created_at"],
+                    updated_at=row["updated_at"]
+                ))
+        return segments
+
+    def update(self, segment: StorySegment) -> StorySegment:
+        segment.updated_at = datetime.utcnow().isoformat()
+        with self.db.get_connection() as conn:
+            conn.execute(
+                """
+                UPDATE story_segments SET
+                    raw_input = ?, generated_prose = ?, status = ?,
+                    word_count = ?, updated_at = ?
+                WHERE id = ?
+                """,
+                (
+                    segment.raw_input, segment.generated_prose,
+                    segment.status, segment.word_count, segment.updated_at,
+                    segment.id
+                )
+            )
+            conn.commit()
+        return segment
+
+    def delete(self, segment_id: str) -> bool:
+        with self.db.get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("DELETE FROM story_segments WHERE id = ?", (segment_id,))
+            conn.commit()
+            return cur.rowcount > 0
