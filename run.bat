@@ -1,15 +1,15 @@
 @echo off
-title HavenQuill — AI Story & Screenplay Sanctuary
+title HavenQuill — AI Story ^& Screenplay Sanctuary
 color 0A
 
 echo =====================================================================
-echo              HavenQuill — AI Story & Screenplay Sanctuary
+echo              HavenQuill — AI Story ^& Screenplay Sanctuary
 echo =====================================================================
 echo.
 echo [1/4] Checking Python Virtual Environment...
 
 if not exist ".venv\Scripts\python.exe" (
-    echo [*] Creating virtual environment (.venv)...
+    echo [*] Creating virtual environment .venv...
     python -m venv .venv
     echo [*] Installing dependencies from requirements.txt...
     .\.venv\Scripts\python.exe -m pip install --upgrade pip
@@ -19,7 +19,7 @@ if not exist ".venv\Scripts\python.exe" (
 )
 
 echo.
-echo [2/4] Verifying Faster-Whisper Local Installation & Model Isolation...
+echo [2/4] Verifying Faster-Whisper Local Installation ^& Model Isolation...
 rem Ensure model weights and cache stay strictly inside local project subfolder (no C drive clutter)
 set WHISPER_CACHE=%~dp0data\whisper_models
 if not exist "%WHISPER_CACHE%" (
@@ -38,7 +38,7 @@ if %ERRORLEVEL% neq 0 (
 )
 
 echo.
-echo [3/4] Checking Environment Configuration (.env)...
+echo [3/4] Checking Environment Configuration .env...
 if not exist ".env" (
     echo [*] Creating initial .env from .env.example...
     copy .env.example .env >nul
