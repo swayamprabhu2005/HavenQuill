@@ -1,6 +1,7 @@
 """Main Dashboard View for HavenQuill."""
 
 import streamlit as st
+from pathlib import Path
 from datetime import datetime
 from storybook.models import Project
 from storybook.services.story_service import StoryService
@@ -16,19 +17,33 @@ def render_dashboard(story_service: StoryService) -> None:
     # Ensure sample project is available on first launch
     seed_sample_project_if_needed()
 
-    st.markdown(
-        """
-        <div style="padding: 10px 0px 20px 0px;">
-            <h1 style="margin: 0; font-family: Georgia, serif; font-weight: normal; font-size: 2.4rem;">
-                🪶 HavenQuill
-            </h1>
-            <p style="color: #6c757d; font-size: 1.05rem; margin-top: 5px;">
-                Your private, local-first story & screenplay sanctuary.
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    logo_path = Path(__file__).resolve().parent.parent.parent / "docs" / "assets" / "logo.png"
+    if logo_path.exists():
+        st.image(str(logo_path), width=360)
+        st.markdown(
+            """
+            <div style="padding: 4px 0px 18px 0px;">
+                <p style="color: #6c757d; font-size: 1.05rem; margin-top: 5px;">
+                    Your private, local-first story & screenplay sanctuary.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(
+            """
+            <div style="padding: 10px 0px 20px 0px;">
+                <h1 style="margin: 0; font-family: Georgia, serif; font-weight: normal; font-size: 2.4rem;">
+                    🪶 HavenQuill
+                </h1>
+                <p style="color: #6c757d; font-size: 1.05rem; margin-top: 5px;">
+                    Your private, local-first story & screenplay sanctuary.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     # Top Action Quick-Bar
     col_new, col_voice, col_import, col_backup = st.columns(4)

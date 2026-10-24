@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/logo.png" alt="HavenQuill Logo" width="640">
+</p>
+
 # 🪶 HavenQuill
 ### *A Private, Local-First AI Story-Writing & Screenplay Sanctuary*
 

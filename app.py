@@ -1,6 +1,7 @@
 """HavenQuill - Main Application Entrypoint."""
 
 import streamlit as st
+from pathlib import Path
 from storybook.config import config
 from storybook.services.story_service import StoryService
 from storybook.services.outline_service import OutlineService
@@ -26,9 +27,10 @@ continuity_service = ContinuityService()
 
 
 def main():
+    logo_path = Path(__file__).resolve().parent / "docs" / "assets" / "logo.png"
     st.set_page_config(
         page_title="HavenQuill — AI Story & Screenplay Sanctuary",
-        page_icon="🪶",
+        page_icon=str(logo_path) if logo_path.exists() else "🪶",
         layout="wide",
         initial_sidebar_state="expanded",
     )
@@ -104,15 +106,26 @@ def main():
 
     # Sidebar Navigation & Context
     with st.sidebar:
-        st.markdown(
-            """
-            <div style="padding: 10px 0 15px 0;">
-                <h2 style="margin: 0; font-family: Georgia, serif; font-size: 1.6rem;">🪶 HavenQuill</h2>
-                <span class="saved-pill">● Local SQLite Active</span>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        if logo_path.exists():
+            st.image(str(logo_path), use_container_width=True)
+            st.markdown(
+                """
+                <div style="padding: 2px 0 14px 0;">
+                    <span class="saved-pill">● Local SQLite Active</span>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown(
+                """
+                <div style="padding: 10px 0 15px 0;">
+                    <h2 style="margin: 0; font-family: Georgia, serif; font-size: 1.6rem;">🪶 HavenQuill</h2>
+                    <span class="saved-pill">● Local SQLite Active</span>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
         projects = story_service.list_projects()
         project_ids = [p.id for p in projects]
